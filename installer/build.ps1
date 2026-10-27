@@ -1,6 +1,6 @@
 ﻿# Сборка установщика «Отчёт СЗЗ»: PyInstaller (программа + Python) -> Inno Setup.
 # Запуск: powershell -ExecutionPolicy Bypass -File installer\build.ps1
-# Результат: installer\output\Отчет_СЗЗ_установка_<версия>.exe
+# Результат: installer\output\Otchet_SZZ_setup_<версия>.exe
 
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path

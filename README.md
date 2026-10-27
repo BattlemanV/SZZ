@@ -22,7 +22,7 @@
 
 ## Установка
 
-Скачайте установщик `Отчет_СЗЗ_установка_<версия>.exe` из раздела
+Скачайте установщик `Otchet_SZZ_setup_<версия>.exe` из раздела
 [Releases](../../releases) и запустите его. Python ставить не нужно, права
 администратора не требуются.
 
@@ -70,7 +70,7 @@ pip install pyinstaller
 powershell -ExecutionPolicy Bypass -File installer\build.ps1
 ```
 
-Результат — `installer\output\Отчет_СЗЗ_установка_<версия>.exe`; версия задаётся
+Результат — `installer\output\Otchet_SZZ_setup_<версия>.exe`; версия задаётся
 в [installer/szz.iss](installer/szz.iss) (`AppVersion`).
 
 ### Устройство
