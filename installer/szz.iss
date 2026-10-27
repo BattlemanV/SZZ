@@ -51,7 +51,10 @@ Type: files; Name: "{app}\settings.ini"
 
 [Code]
 var
-  VocwPage: TInputDirWizardPage;
+  { обычное поле ввода, а не страница выбора каталога: та сама требует
+    полный путь и не пропускает пустое поле, а справочник необязателен }
+  VocwPage: TInputQueryWizardPage;
+  BrowseButton: TNewButton;
 
 function IsVocwDir(const Dir: String): Boolean;
 begin
@@ -77,9 +80,22 @@ begin
         Result := Trim(Copy(Lines[I], Pos('=', Lines[I]) + 1, MaxInt));
 end;
 
-procedure InitializeWizard();
+procedure BrowseClick(Sender: TObject);
+var
+  Dir: String;
 begin
-  VocwPage := CreateInputDirPage(wpSelectDir,
+  Dir := Trim(VocwPage.Values[0]);
+  if Dir = '' then
+    Dir := '{#DefaultVocw}';
+  if BrowseForFolder('Выберите каталог справочника веществ (VocW)', Dir, False) then
+    VocwPage.Values[0] := Dir;
+end;
+
+procedure InitializeWizard();
+var
+  Edit: TPasswordEdit;
+begin
+  VocwPage := CreateInputQueryPage(wpSelectDir,
     'Справочник веществ УПРЗА «Эколог» (необязательно)',
     'Где установлен справочник веществ (VocW)?',
     'Из справочника программа берёт классы опасности веществ для таблицы 3.1 ' +
@@ -87,10 +103,21 @@ begin
     'с файлом FPR.ADT (обычно C:\integral.ltd\VocW).' + #13#10#13#10 +
     'Если «Эколог» на этом компьютере не установлен, оставьте поле пустым: ' +
     'нормативы возьмутся из отчётов, а классы опасности можно задать ' +
-    'в файле «классы опасности.csv».',
-    False, '');
-  VocwPage.Add('Каталог справочника (можно оставить пустым):');
+    'в файле «классы опасности.csv».');
+  VocwPage.Add('Каталог справочника (можно оставить пустым):', False);
   VocwPage.Values[0] := InitialVocwDir();
+
+  { кнопка «Обзор…» справа от поля }
+  Edit := VocwPage.Edits[0];
+  BrowseButton := TNewButton.Create(VocwPage);
+  BrowseButton.Parent := VocwPage.Surface;
+  BrowseButton.Caption := 'Обзор…';
+  BrowseButton.Width := ScaleX(90);
+  BrowseButton.Height := ScaleY(23);
+  BrowseButton.Left := VocwPage.SurfaceWidth - BrowseButton.Width;
+  BrowseButton.Top := Edit.Top - ScaleY(1);
+  BrowseButton.OnClick := @BrowseClick;
+  Edit.Width := BrowseButton.Left - Edit.Left - ScaleX(8);
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
